@@ -21,7 +21,7 @@ const navItems = [
   { name: '人物设定', path: '/characters' },
   { name: '角色经历', path: '/world' },
   { name: '图集', path: '/gallery' },
-  { name: '关于', path: '/about' },
+  { name: '留言板', path: '/about' },
 ]
 </script>
 

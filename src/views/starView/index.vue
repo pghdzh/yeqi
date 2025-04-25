@@ -144,7 +144,7 @@ import { ref } from 'vue'
 .explore-button:active {
   transform: scale(0.95);
   box-shadow: 0 0 12px var(--purple);
-}
+} 
 @keyframes pulse {
   0%,100% { box-shadow: 0 0 18px var(--pink); }
   50%   { box-shadow: 0 0 28px var(--purple); }
