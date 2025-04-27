@@ -2,13 +2,7 @@
   <header class="app-header">
     <h1 class="title">Yuzuriha Chronicle</h1>
     <nav class="nav-links">
-      <RouterLink
-        v-for="item in navItems"
-        :key="item.name"
-        :to="item.path"
-        class="nav-item"
-        active-class="active-link"
-      >
+      <RouterLink v-for="item in navItems" :key="item.name" :to="item.path" class="nav-item" active-class="active-link">
         {{ item.name }}
       </RouterLink>
     </nav>
@@ -22,6 +16,7 @@ const navItems = [
   { name: '角色经历', path: '/world' },
   { name: '图集', path: '/gallery' },
   { name: '留言板', path: '/about' },
+  { name: '与祈对话', path: '/yeqiChat' },
 ]
 </script>
 
@@ -49,6 +44,7 @@ const navItems = [
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -121,6 +117,7 @@ const navItems = [
   .app-header {
     padding: 0 20px;
   }
+
   .nav-links {
     display: none;
   }

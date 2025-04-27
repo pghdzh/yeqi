@@ -1,7 +1,6 @@
 <template>
-  <div class="gallery-page" @keyup.esc="closePreview" tabindex="0" ref="galleryPage">
-    <!-- 顶部导航（可添加） -->
-
+  <div class="gallery-page" @keyup.esc="closePreview" tabindex="0">
+  
     <!-- 主体内容 -->
     <main class="container">
       <h2 class="title">图集</h2>
@@ -12,7 +11,7 @@
           class="grid-item"
           @click="openPreview(idx)"
         >
-          <img :src="img.src" :alt="img.alt" loading="lazy" />
+          <img :src="img.src" :alt="img.alt" />
         </div>
       </div>
     </main>
@@ -30,27 +29,43 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 
+// 引入图片资源
+// 假设你的图片放在 src/assets/gallery/ 目录
 const imports = import.meta.glob('@/assets/img/*.{jpg,png,jpeg}', { eager: true })
 const images = Object.values(imports).map((mod: any) => ({
   src: mod.default,
   alt: ''
 }))
 
+// Lightbox 状态
 const preview = ref({ open: false, index: 0 })
+
+// 打开预览
 function openPreview(idx: number) {
   preview.value = { open: true, index: idx }
 }
+
+// 关闭预览
 function closePreview() {
   preview.value.open = false
 }
+
+// 切换到上一张
 function prevImage() {
-  preview.value.index = (preview.value.index + images.length - 1) % images.length
+  preview.value.index =
+    (preview.value.index + images.length - 1) % images.length
 }
+
+// 切换到下一张
 function nextImage() {
-  preview.value.index = (preview.value.index + 1) % images.length
+  preview.value.index =
+    (preview.value.index + 1) % images.length
 }
+
+// 当前预览图
 const currentImage = computed(() => images[preview.value.index])
 
+// 组件获得焦点以捕捉键盘
 const galleryPage = ref<HTMLElement>()
 onMounted(() => {
   galleryPage.value?.focus()
@@ -62,24 +77,9 @@ onMounted(() => {
   position: relative;
   min-height: calc(100vh - 64px);
   padding-top: 80px;
-  background: linear-gradient(135deg, #0b0010, #1a0f2f, #311b92);
-  background-size: 600% 600%;
-  animation: gradient-flow 30s ease infinite;
+  background: #0b0010;
   color: #fff;
   outline: none;
-  overflow-x: hidden;
-}
-
-@keyframes gradient-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 
 .container {
@@ -92,9 +92,10 @@ onMounted(() => {
   font-size: 32px;
   text-align: center;
   margin-bottom: 24px;
-  text-shadow: 0 0 8px #bd93f9, 0 0 16px #ff79c6;
+  text-shadow: 0 0 8px #bd93f9;
 }
 
+/* 网格布局 */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -102,9 +103,8 @@ onMounted(() => {
 }
 .grid-item {
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(255, 121, 198, 0.2);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 .grid-item img {
@@ -115,32 +115,29 @@ onMounted(() => {
   transition: transform 0.3s;
 }
 .grid-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(255, 121, 198, 0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 .grid-item:hover img {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
+/* Lightbox 预览 */
 .lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  backdrop-filter: blur(10px);
-  animation: fadeIn 0.3s ease;
 }
 .lightbox-img {
   max-width: 90%;
   max-height: 90%;
-  border-radius: 12px;
-  box-shadow: 0 0 30px rgba(139, 233, 255, 0.8);
-  transition: transform 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(255, 121, 198, 0.8);
 }
-
 .close-btn,
 .nav-btn {
   position: absolute;
@@ -171,6 +168,7 @@ onMounted(() => {
   transform: translateY(-50%);
 }
 
+/* 响应式调整 */
 @media (max-width: 600px) {
   .grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -182,17 +180,6 @@ onMounted(() => {
   .close-btn,
   .nav-btn {
     font-size: 36px;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 </style>

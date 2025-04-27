@@ -13,23 +13,27 @@ const router = createRouter({
     },
     {
       path: "/characters",
-     
+
       component: () => import("@/views/charactersView/index.vue"),
     },
     {
       path: "/world",
-     
+
       component: () => import("@/views/worldView/index.vue"),
     },
     {
       path: "/gallery",
-      
+
       component: () => import("@/views/galleryView/index.vue"),
     },
     {
       path: "/about",
-     
+
       component: () => import("@/views/aboutView/index.vue"),
+    },
+    {
+      path: "/yeqiChat",
+      component: () => import("@/views/yeqiChatView/index.vue"),
     },
   ],
   scrollBehavior() {
