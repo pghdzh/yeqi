@@ -1,6 +1,6 @@
 <template>
   <div class="home-page" @mousemove="onMouseMove">
-  
+
     <!-- 主要内容展示 -->
     <section class="intro">
       <h1 class="main-title">楪祈 · 电子设定集</h1>
@@ -9,55 +9,85 @@
       </p>
       <RouterLink class="explore-button" to="/characters">开始探索</RouterLink>
     </section>
+
+    <!-- 底部星辰闪烁 -->
+    <div class="starry-names">
+      <span
+        v-for="(star, idx) in stars"
+        :key="idx"
+        class="star-name"
+        :style="{
+          left: star.left + '%',
+          bottom: star.bottom + 'px',
+          color: star.color,
+          animationDelay: star.flickerDelay + 's',
+          animationDuration: star.flickerDuration + 's'
+        }"
+      >
+        {{ star.name }}
+      </span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+// 生成随机柔和的颜色
+function randomSoftHsl() {
+  const h = Math.floor(Math.random() * 360)
+  const s = 60 + Math.random() * 20  // 60-80%饱和度
+  const l = 65 + Math.random() * 10  // 65-75%亮度
+  return `hsl(${h}, ${s}%, ${l}%)`
+}
 
+const names = [
+  '无机甲亢', '昵称1','昵称2'
+]
 
+const stars = ref(
+  names.map(name => ({
+    name,
+    left: 5 + Math.random() * 90,          // 5% ~ 95% 水平
+    bottom: 20 + Math.random() * 220,       // 20px ~ 240px 垂直
+    color: randomSoftHsl(),
+    flickerDelay: Math.random() * 3,        // 闪烁延迟
+    flickerDuration: 2 + Math.random() * 2  // 闪烁时长 2-4s
+  }))
+)
 </script>
 
 <style scoped>
-:root {
-  --pink: #ff79c6;
-  --purple: #bd93f9;
-  --dark1: #2d004e;
-  /* 视差变量 */
-  --parallax-x: 0deg;
-  --parallax-y: 0deg;
-}
-
 .home-page {
   padding-top: 100px;
   position: relative;
   min-height: calc(100vh - 64px);
   overflow: hidden;
-  color: #fff;
-  /* 动态流动渐变背景 */
-  background: linear-gradient(135deg, var(--pink), var(--purple), #8be9fd);
+  color: #ffffff;
+  /* background: linear-gradient(135deg, #ff79c6, #bd93f9, #8be9fd); */
   background-size: 600% 600%;
   animation: gradient-flow 20s ease infinite;
-  /* 叠层视差变换 */
-  transform: perspective(500px)
-    rotateX(calc(var(--parallax-y) * 0.05))
-    rotateY(calc(var(--parallax-x) * 0.05));
+  transform: perspective(500px) rotateX(calc(var(--parallax-y) * 0.05)) rotateY(calc(var(--parallax-x) * 0.05));
 }
 
-/* 流动渐变 */
 @keyframes gradient-flow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-/* 云雾 + 噪点叠层 */
 .home-page::before {
   content: '';
   position: absolute;
   inset: 0;
   background: url('@/assets/cloud-noise.png') repeat;
-
   background-size: 800px 800px;
   filter: blur(6px);
   mix-blend-mode: overlay;
@@ -65,55 +95,65 @@ import { ref } from 'vue'
   pointer-events: none;
 }
 
-
-
-/* 云雾移动 */
 @keyframes cloud-move {
-  from { background-position: 0 0; }
-  to { background-position: 1000px 0; }
-}
+  from {
+    background-position: 0 0;
+  }
 
+  to {
+    background-position: 1000px 0;
+  }
+}
 
 /* 内容入场动画 */
 .intro {
   position: relative;
   z-index: 1;
   text-align: center;
-  margin-top: 100px;
+  margin: 100px auto 0;
   padding: 0 24px;
   max-width: 1200px;
-  margin: 0 auto;
   animation: fadeInUp 1.5s ease-out both;
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* 标题 */
+/* 主标题 */
 .main-title {
   font-size: 56px;
   font-weight: 800;
-  color: var(--pink);
-  text-shadow: 0 0 12px var(--pink), 0 0 24px var(--purple);
+  color: #ff79c6;
+  text-shadow: 0 0 12px #ff79c6, 0 0 24px #bd93f9;
   animation: glow-text 3s infinite ease-in-out alternate;
   margin-bottom: 20px;
   transition: transform 0.3s ease;
 }
+
 .main-title:hover {
   transform: scale(1.02);
 }
+
 @keyframes glow-text {
   from {
-    text-shadow: 0 0 10px var(--pink), 0 0 20px var(--purple);
+    text-shadow: 0 0 10px #ff79c6, 0 0 20px #bd93f9;
   }
+
   to {
-    text-shadow: 0 0 25px var(--pink), 0 0 40px var(--purple);
+    text-shadow: 0 0 25px #ff79c6, 0 0 40px #bd93f9;
   }
 }
 
-/* 描述 */
+/* 描述文字 */
 .description {
   font-size: 20px;
   color: #e0e0e0;
@@ -128,27 +168,68 @@ import { ref } from 'vue'
   display: inline-block;
   padding: 14px 36px;
   border-radius: 50px;
-  background: linear-gradient(to right, var(--pink), var(--purple));
-  color: #fff;
+  background: linear-gradient(to right, #ff79c6, #bd93f9);
+  color: #ffffff;
   font-weight: bold;
   font-size: 18px;
-  box-shadow: 0 0 18px var(--pink);
+  box-shadow: 0 0 18px #ff79c6;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: pulse 2s infinite ease-in-out;
   text-decoration: none;
 }
+
 .explore-button:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 25px var(--pink);
+  box-shadow: 0 0 25px #ff79c6;
 }
+
 .explore-button:active {
   transform: scale(0.95);
-  box-shadow: 0 0 12px var(--purple);
-} 
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 18px var(--pink); }
-  50%   { box-shadow: 0 0 28px var(--purple); }
+  box-shadow: 0 0 12px #bd93f9;
 }
 
+@keyframes pulse {
 
+  0%,
+  100% {
+    box-shadow: 0 0 18px #ff79c6;
+  }
+
+  50% {
+    box-shadow: 0 0 28px #bd93f9;
+  }
+}
+
+/* 星星名字区域 */
+.starry-names {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 250px; /* 提高范围 */
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.star-name {
+  position: absolute;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 600;
+  text-shadow: 0 0 4px currentColor, 0 0 8px currentColor;
+  animation-name: flicker;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* 闪烁动画 */
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
 </style>
