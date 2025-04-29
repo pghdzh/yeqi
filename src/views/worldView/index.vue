@@ -1,13 +1,14 @@
 <template>
   <div class="timeline-page">
+    <!-- 背景轮播放在最底层 -->
+    <div class="carousel">
+      <img v-for="(src, idx) in images" :key="idx" :src="src" :class="{ active: idx === currentIndex }"
+        class="carousel-image" />
+    </div>
     <main class="timeline-container">
       <h2 class="page-title">楪祈的经历</h2>
       <div class="timeline-list">
-        <div
-          v-for="(ev, idx) in timeline"
-          :key="idx"
-          :class="['timeline-item', idx % 2 === 0 ? 'left' : 'right']"
-        >
+        <div v-for="(ev, idx) in timeline" :key="idx" :class="['timeline-item', idx % 2 === 0 ? 'left' : 'right']">
           <div class="marker"></div>
           <div class="content">
             <div class="year">{{ ev.year }}</div>
@@ -21,7 +22,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+
+
+const images = [
+  new URL('/img/3.png', import.meta.url).href,
+  new URL('/img/4.png', import.meta.url).href,
+]
+
+const currentIndex = ref(0)
+let timer: number
+
+onMounted(() => {
+  // 2. 每 5 秒切换一次
+  timer = window.setInterval(() => {
+    currentIndex.value = (currentIndex.value + 1) % images.length
+  }, 5000)
+})
+
+onUnmounted(() => {
+  clearInterval(timer)
+})
+
 
 interface TimelineEvent {
   year: string;
@@ -63,15 +85,27 @@ onMounted(() => {
   position: relative;
   min-height: calc(100vh - 64px);
   padding: 80px 0;
-  background: linear-gradient(135deg, #ff79c6, #bd93f9, #8be9fd);
-  background-size: 600% 600%;
-  animation: gradient-flow 20s ease infinite;
 }
 
-@keyframes gradient-flow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.carousel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* 放在最底层 */
+}
+
+/* 叠加所有图片，通过 opacity 实现切换 */
+.carousel-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.carousel-image.active {
+  opacity: 1;
 }
 
 .timeline-container {
@@ -91,6 +125,7 @@ onMounted(() => {
 
 .timeline-list {
   position: relative;
+
   &:before {
     content: '';
     position: absolute;
@@ -99,7 +134,7 @@ onMounted(() => {
     transform: translateX(-50%);
     width: 2px;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3));
   }
 }
 
@@ -118,18 +153,27 @@ onMounted(() => {
   &.left {
     left: 0;
     transform: translateX(-20px) translateY(20px);
+
     .in-view & {
       transform: translateX(0) translateY(0);
     }
-    .content { margin-right: auto; }
+
+    .content {
+      margin-right: auto;
+    }
   }
+
   &.right {
     left: 50%;
     transform: translateX(20px) translateY(20px);
+
     .in-view & {
       transform: translateX(0) translateY(0);
     }
-    .content { margin-left: auto; }
+
+    .content {
+      margin-left: auto;
+    }
   }
 
   .marker {
@@ -144,6 +188,7 @@ onMounted(() => {
     box-shadow: 0 0 8px #ff79c6;
     transition: transform 0.3s ease;
   }
+
   &:hover .marker {
     transform: translate(-50%, -50%) scale(1.2);
   }
@@ -153,13 +198,13 @@ onMounted(() => {
     background: #ffffff;
     border-radius: 12px;
     padding: 20px 24px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     width: calc(100% - 60px);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     }
 
     .year {
@@ -167,11 +212,13 @@ onMounted(() => {
       color: #bd93f9;
       margin-bottom: 8px;
     }
+
     .title {
       font-size: 1.25rem;
       color: #333333;
       margin-bottom: 12px;
     }
+
     .desc {
       font-size: 1rem;
       color: #555555;
@@ -181,15 +228,27 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .timeline-list:before { left: 8px; }
+  .timeline-list:before {
+    left: 8px;
+  }
+
   .timeline-item {
     width: 100%;
     left: 0 !important;
     transform: translateX(0) translateY(20px);
 
-    &.in-view { transform: translateY(0); }
-    .content { margin: 0 0 0 32px; width: calc(100% - 40px); }
-    .marker { left: 8px; }
+    &.in-view {
+      transform: translateY(0);
+    }
+
+    .content {
+      margin: 0 0 0 32px;
+      width: calc(100% - 40px);
+    }
+
+    .marker {
+      left: 8px;
+    }
   }
 }
 </style>

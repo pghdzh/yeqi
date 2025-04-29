@@ -1,6 +1,10 @@
 <template>
   <div class="home-page" @mousemove="onMouseMove">
-
+    <!-- 背景轮播放在最底层 -->
+    <div class="carousel">
+      <img v-for="(src, idx) in images" :key="idx" :src="src" :class="{ active: idx === currentIndex }"
+        class="carousel-image" />
+    </div>
     <!-- 主要内容展示 -->
     <section class="intro">
       <h1 class="main-title">楪祈 · 电子设定集</h1>
@@ -12,18 +16,13 @@
 
     <!-- 底部星辰闪烁 -->
     <div class="starry-names">
-      <span
-        v-for="(star, idx) in stars"
-        :key="idx"
-        class="star-name"
-        :style="{
-          left: star.left + '%',
-          bottom: star.bottom + 'px',
-          color: star.color,
-          animationDelay: star.flickerDelay + 's',
-          animationDuration: star.flickerDuration + 's'
-        }"
-      >
+      <span v-for="(star, idx) in stars" :key="idx" class="star-name" :style="{
+        left: star.left + '%',
+        bottom: star.bottom + 'px',
+        color: star.color,
+        animationDelay: star.flickerDelay + 's',
+        animationDuration: star.flickerDuration + 's'
+      }">
         {{ star.name }}
       </span>
     </div>
@@ -31,7 +30,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+
+const images = [
+  new URL('/img/1.png', import.meta.url).href,
+  new URL('/img/2.png', import.meta.url).href,
+]
+
+const currentIndex = ref(0)
+let timer: number
+
+onMounted(() => {
+  // 2. 每 5 秒切换一次
+  timer = window.setInterval(() => {
+    currentIndex.value = (currentIndex.value + 1) % images.length
+  }, 5000)
+})
+
+onUnmounted(() => {
+  clearInterval(timer)
+})
+
 // 生成随机柔和的颜色
 function randomSoftHsl() {
   const h = Math.floor(Math.random() * 360)
@@ -41,7 +60,7 @@ function randomSoftHsl() {
 }
 
 const names = [
-  '无机甲亢', '昵称1','昵称2'
+  '无机甲亢', '祈愿丶楪祈'
 ]
 
 const stars = ref(
@@ -63,24 +82,35 @@ const stars = ref(
   min-height: calc(100vh - 64px);
   overflow: hidden;
   color: #ffffff;
-  /* background: linear-gradient(135deg, #ff79c6, #bd93f9, #8be9fd); */
-  background-size: 600% 600%;
-  animation: gradient-flow 20s ease infinite;
-  transform: perspective(500px) rotateX(calc(var(--parallax-y) * 0.05)) rotateY(calc(var(--parallax-x) * 0.05));
+
 }
 
-@keyframes gradient-flow {
-  0% {
-    background-position: 0% 50%;
-  }
+.carousel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* 放在最底层 */
+}
 
-  50% {
-    background-position: 100% 50%;
-  }
+/* 叠加所有图片，通过 opacity 实现切换 */
+.carousel-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
 
-  100% {
-    background-position: 0% 50%;
-  }
+.carousel-image.active {
+  opacity: 1;
+}
+
+/* 确保内容展示层级更高 */
+.intro,
+.starry-names {
+  position: relative;
+  z-index: 1;
 }
 
 .home-page::before {
@@ -206,7 +236,8 @@ const stars = ref(
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 250px; /* 提高范围 */
+  height: 250px;
+  /* 提高范围 */
   pointer-events: none;
   overflow: hidden;
   z-index: 2;
@@ -225,9 +256,12 @@ const stars = ref(
 
 /* 闪烁动画 */
 @keyframes flicker {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.4;
   }
