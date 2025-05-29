@@ -17,6 +17,7 @@ const navItems = [
   { name: '图集', path: '/gallery' },
   { name: '留言板', path: '/about' },
   { name: '与祈对话', path: '/yeqiChat' },
+  { name: '抽奖', path: '/luckDraw' }
 ]
 </script>
 

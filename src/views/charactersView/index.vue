@@ -1,6 +1,10 @@
 <template>
     <div class="inori-page">
-        <div class="bg-particles"></div>
+        <!-- 背景轮播放在最底层 -->
+        <div class="carousel">
+            <img v-for="(src, idx) in randomFive" :key="idx" :src="src" class="carousel-image"
+                :class="{ active: idx === currentIndex }" />
+        </div>
         <div class="content-wrapper">
             <!-- 角色简介 -->
             <section class="detail-intro">
@@ -45,12 +49,49 @@
 </template>
 <script setup lang="ts">
 import inoriImg from '@/assets/img/楪祈1.png'
+import { ref, onMounted, onUnmounted } from 'vue';
+
+
+// 1. 全量导入，直接映射成 string[]
+const modules = import.meta.glob("@/assets/images1/*.{jpg,png,jpeg}", {
+    eager: true,
+});
+const allSrcs: string[] = Object.values(modules).map((mod: any) => mod.default);
+
+// 2. 洗牌并取 5 张
+function shuffle<T>(arr: T[]): T[] {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+const randomFive = ref<string[]>(shuffle(allSrcs).slice(0, 5));
+
+const currentIndex = ref(0);
+let timer: number;
+
+onMounted(() => {
+    // 2. 每 5 秒切换一次
+    timer = window.setInterval(() => {
+        currentIndex.value = (currentIndex.value + 1) % randomFive.value.length;
+    }, 5000);
+});
+
+
+onUnmounted(() => {
+    clearInterval(timer);
+});
+
+
+
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .inori-page {
     position: relative;
-    min-height: calc(100vh - 64px);
+    min-height: 100vh;
     background: linear-gradient(135deg, #1e1b44, #4f2b8b, #ff79c6);
     background-size: 600% 600%;
     animation: gradient-flow 20s ease infinite;
@@ -58,15 +99,38 @@ import inoriImg from '@/assets/img/楪祈1.png'
     overflow: hidden;
 }
 
-.bg-particles {
+.carousel {
     position: absolute;
     inset: 0;
-    background: url('@/assets/img/particles.gif') repeat;
-    background-size: cover;
-    opacity: 0.1;
+    z-index: 0;
+
+    /* 放在最底层 */
+    /* 叠加所有图片，通过 opacity 实现切换 */
+    .carousel-image {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 1s ease;
+        filter: blur(1.5px);
+        /* 轻微模糊 */
+    }
+
+    .carousel-image.active {
+        opacity: 1;
+    }
+}
+
+/* 遮罩层 */
+.carousel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    /* 遮罩透明度可调 */
     pointer-events: none;
     z-index: 1;
-    filter: blur(2px);
 }
 
 .content-wrapper {

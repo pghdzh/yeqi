@@ -75,7 +75,7 @@ onMounted(() => {
 <style scoped>
 .gallery-page {
   position: relative;
-  min-height: calc(100vh - 64px);
+  min-height: 100vh;
   padding-top: 80px;
   background: #0b0010;
   color: #fff;

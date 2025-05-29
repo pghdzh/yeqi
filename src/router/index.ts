@@ -35,6 +35,10 @@ const router = createRouter({
       path: "/yeqiChat",
       component: () => import("@/views/yeqiChatView/index.vue"),
     },
+    {
+      path: "/luckDraw",
+      component: () => import("@/views/LuckyDraw/index.vue"),
+    },
   ],
   scrollBehavior() {
     return { top: 0 };

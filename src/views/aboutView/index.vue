@@ -1,6 +1,10 @@
 <template>
   <div class="message-board-page">
-
+    <!-- 背景轮播放在最底层 -->
+    <div class="carousel">
+      <img v-for="(src, idx) in randomFive" :key="idx" :src="src" class="carousel-image"
+        :class="{ active: idx === currentIndex }" />
+    </div>
     <main class="board-container">
       <h2 class="board-title">留言板</h2>
 
@@ -34,8 +38,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { getMessageList, createMessage } from '@/api/modules/message' // 按实际路径修改
+
+import { ref, onMounted, onUnmounted } from 'vue';
+
+
+// 1. 全量导入，直接映射成 string[]
+const modules = import.meta.glob("@/assets/images1/*.{jpg,png,jpeg}", {
+  eager: true,
+});
+const allSrcs: string[] = Object.values(modules).map((mod: any) => mod.default);
+
+// 2. 洗牌并取 5 张
+function shuffle<T>(arr: T[]): T[] {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+const randomFive = ref<string[]>(shuffle(allSrcs).slice(0, 5));
+
+const currentIndex = ref(0);
+let timer: number;
+
+
+
 
 interface Message {
   id: number
@@ -98,14 +127,24 @@ onMounted(() => {
   if (savedName) newName.value = savedName
 
   fetchMessages()
+
+  // 2. 每 5 秒切换一次
+  timer = window.setInterval(() => {
+    currentIndex.value = (currentIndex.value + 1) % randomFive.value.length;
+  }, 5000);
 })
+
+onUnmounted(() => {
+  clearInterval(timer);
+});
+
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .message-board-page {
   position: relative;
-  min-height: calc(100vh - 64px);
-
+  min-height: 100vh;
+  padding-top: 64px;
   background: linear-gradient(135deg, #ff79c6, #bd93f9, #8be9fd);
   background-size: 600% 600%;
   animation: gradient-flow 20s ease infinite;
@@ -127,6 +166,41 @@ onMounted(() => {
   }
 }
 
+.carousel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  /* 放在最底层 */
+  /* 叠加所有图片，通过 opacity 实现切换 */
+  .carousel-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+    filter: blur(1.5px);
+    /* 轻微模糊 */
+  }
+
+  .carousel-image.active {
+    opacity: 1;
+  }
+}
+
+/* 遮罩层 */
+.carousel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  /* 遮罩透明度可调 */
+  pointer-events: none;
+  z-index: 1;
+}
+
+
 .board-container {
   display: flex;
   flex-direction: column;
@@ -135,6 +209,7 @@ onMounted(() => {
   max-width: 700px;
   margin: 0 auto;
   padding: 24px;
+  z-index: 10;
 }
 
 .board-title {
@@ -142,6 +217,7 @@ onMounted(() => {
   text-align: center;
   margin-bottom: 16px;
   text-shadow: 0 0 8px #bd93f9;
+  z-index: 10;
 }
 
 /* 内容区：留言列表 + 表单 */
@@ -150,6 +226,7 @@ onMounted(() => {
   flex-direction: column;
   flex: 1;
   overflow: hidden;
+  z-index: 10;
 }
 
 /* 留言列表 */
