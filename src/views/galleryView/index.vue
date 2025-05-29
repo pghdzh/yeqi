@@ -1,16 +1,11 @@
 <template>
   <div class="gallery-page" @keyup.esc="closePreview" tabindex="0">
-  
+
     <!-- 主体内容 -->
     <main class="container">
       <h2 class="title">图集</h2>
       <div class="grid">
-        <div
-          v-for="(img, idx) in images"
-          :key="idx"
-          class="grid-item"
-          @click="openPreview(idx)"
-        >
+        <div v-for="(img, idx) in images" :key="idx" class="grid-item" @click="openPreview(idx)">
           <img :src="img.src" :alt="img.alt" />
         </div>
       </div>
@@ -31,8 +26,17 @@ import { ref, computed, onMounted } from 'vue'
 
 // 引入图片资源
 // 假设你的图片放在 src/assets/gallery/ 目录
-const imports = import.meta.glob('@/assets/img/*.{jpg,png,jpeg}', { eager: true })
-const images = Object.values(imports).map((mod: any) => ({
+const modules1 = import.meta.glob("@/assets/images1/*.{jpg,jpeg,png,gif}", {
+  eager: true,
+});
+
+const modules2 = import.meta.glob("@/assets/images2/*.{jpg,jpeg,png,gif}", {
+  eager: true,
+});
+
+const mergedModules = { ...modules1, ...modules2 };
+
+const images = Object.values(mergedModules).map((mod: any) => ({
   src: mod.default,
   alt: ''
 }))
@@ -101,12 +105,14 @@ onMounted(() => {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
 }
+
 .grid-item {
   overflow: hidden;
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
 }
+
 .grid-item img {
   width: 100%;
   height: 100%;
@@ -114,10 +120,12 @@ onMounted(() => {
   display: block;
   transition: transform 0.3s;
 }
+
 .grid-item:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
+
 .grid-item:hover img {
   transform: scale(1.05);
 }
@@ -132,12 +140,14 @@ onMounted(() => {
   justify-content: center;
   z-index: 2000;
 }
+
 .lightbox-img {
   max-width: 90%;
   max-height: 90%;
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(255, 121, 198, 0.8);
 }
+
 .close-btn,
 .nav-btn {
   position: absolute;
@@ -149,19 +159,23 @@ onMounted(() => {
   padding: 8px;
   transition: color 0.2s;
 }
+
 .close-btn:hover,
 .nav-btn:hover {
   color: #ff79c6;
 }
+
 .close-btn {
   top: 16px;
   right: 24px;
 }
+
 .nav-btn.prev {
   left: 24px;
   top: 50%;
   transform: translateY(-50%);
 }
+
 .nav-btn.next {
   right: 24px;
   top: 50%;
@@ -174,9 +188,11 @@ onMounted(() => {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 12px;
   }
+
   .title {
     font-size: 28px;
   }
+
   .close-btn,
   .nav-btn {
     font-size: 36px;
