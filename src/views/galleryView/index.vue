@@ -1,11 +1,15 @@
 <template>
   <div class="gallery-page" @keyup.esc="closePreview" tabindex="0">
-
     <!-- 主体内容 -->
     <main class="container">
       <h2 class="title">图集</h2>
       <div class="grid">
-        <div v-for="(img, idx) in images" :key="idx" class="grid-item" @click="openPreview(idx)">
+        <div
+          v-for="(img, idx) in images"
+          :key="idx"
+          class="grid-item"
+          @click="openPreview(idx)"
+        >
           <img :src="img.src" :alt="img.alt" />
         </div>
       </div>
@@ -15,14 +19,18 @@
     <div v-if="preview.open" class="lightbox" @click.self="closePreview">
       <button class="close-btn" @click="closePreview">×</button>
       <button class="nav-btn prev" @click.stop="prevImage">‹</button>
-      <img :src="currentImage.src" :alt="currentImage.alt" class="lightbox-img" />
+      <img
+        :src="currentImage.src"
+        :alt="currentImage.alt"
+        class="lightbox-img"
+      />
       <button class="nav-btn next" @click.stop="nextImage">›</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from "vue";
 
 // 引入图片资源
 // 假设你的图片放在 src/assets/gallery/ 目录
@@ -34,46 +42,48 @@ const modules2 = import.meta.glob("@/assets/images2/*.{jpg,jpeg,png,gif}", {
   eager: true,
 });
 
-const mergedModules = { ...modules1, ...modules2 };
+const modules3 = import.meta.glob("@/assets/images3/*.{jpg,jpeg,png,gif}", {
+  eager: true,
+});
+const mergedModules = { ...modules1, ...modules2, ...modules3 };
 
 const images = Object.values(mergedModules).map((mod: any) => ({
   src: mod.default,
-  alt: ''
-}))
+  alt: "",
+}));
 
 // Lightbox 状态
-const preview = ref({ open: false, index: 0 })
+const preview = ref({ open: false, index: 0 });
 
 // 打开预览
 function openPreview(idx: number) {
-  preview.value = { open: true, index: idx }
+  preview.value = { open: true, index: idx };
 }
 
 // 关闭预览
 function closePreview() {
-  preview.value.open = false
+  preview.value.open = false;
 }
 
 // 切换到上一张
 function prevImage() {
   preview.value.index =
-    (preview.value.index + images.length - 1) % images.length
+    (preview.value.index + images.length - 1) % images.length;
 }
 
 // 切换到下一张
 function nextImage() {
-  preview.value.index =
-    (preview.value.index + 1) % images.length
+  preview.value.index = (preview.value.index + 1) % images.length;
 }
 
 // 当前预览图
-const currentImage = computed(() => images[preview.value.index])
+const currentImage = computed(() => images[preview.value.index]);
 
 // 组件获得焦点以捕捉键盘
-const galleryPage = ref<HTMLElement>()
+const galleryPage = ref<HTMLElement>();
 onMounted(() => {
-  galleryPage.value?.focus()
-})
+  galleryPage.value?.focus();
+});
 </script>
 
 <style scoped>

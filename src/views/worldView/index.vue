@@ -2,13 +2,22 @@
   <div class="timeline-page">
     <!-- 背景轮播放在最底层 -->
     <div class="carousel">
-      <img v-for="(src, idx) in randomFive" :key="idx" :src="src" class="carousel-image"
-        :class="{ active: idx === currentIndex }" />
+      <img
+        v-for="(src, idx) in randomFive"
+        :key="idx"
+        :src="src"
+        class="carousel-image"
+        :class="{ active: idx === currentIndex }"
+      />
     </div>
     <main class="timeline-container">
       <h2 class="page-title">楪祈的经历</h2>
       <div class="timeline-list">
-        <div v-for="(ev, idx) in timeline" :key="idx" :class="['timeline-item', idx % 2 === 0 ? 'left' : 'right']">
+        <div
+          v-for="(ev, idx) in timeline"
+          :key="idx"
+          :class="['timeline-item', idx % 2 === 0 ? 'left' : 'right']"
+        >
           <div class="marker"></div>
           <div class="content">
             <div class="year">{{ ev.year }}</div>
@@ -22,11 +31,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-
+import { ref, onMounted, onUnmounted } from "vue";
 
 // 1. 全量导入，直接映射成 string[]
-const modules = import.meta.glob("@/assets/images1/*.{jpg,png,jpeg}", {
+const modules = import.meta.glob("@/assets/images2/*.{jpg,png,jpeg}", {
   eager: true,
 });
 const allSrcs: string[] = Object.values(modules).map((mod: any) => mod.default);
@@ -45,21 +53,65 @@ const randomFive = ref<string[]>(shuffle(allSrcs).slice(0, 5));
 const currentIndex = ref(0);
 let timer: number;
 
-
 onUnmounted(() => {
   clearInterval(timer);
 });
 
-const timeline = ref<TimelineEvent[]>([
-  { year: '第1集 开场', title: '潜入GHQ研究所', description: '为窃取罪恶王冠的“钥匙”潜入湖畔研究所，成功偷取后被流弹击中跌入湖中；后被樱满集发现并救起。' },
-  { year: '第1-2集', title: '同居与觉醒', description: '转校至集的班级并与其同居，祈对集制作的VCR产生好感，逐渐萌发自我意识与对集的情感。' },
-  { year: '第4-10集', title: '并肩作战', description: '作为葬仪社成员，参与多次潜入和救援任务，与集建立深厚信任，并在战斗中相互依靠。' },
-  { year: '第11集', title: '共鸣数测量', description: '集的母亲测得祈的基因共鸣数超3000，基因检测仪显示“OVER”，彰显其虚空力量异常强大。' },
-  { year: '第16-17集', title: '被病毒操控', description: '真名记忆与思考的病毒被注入祈体内，为完成回收遗传因子与虚空碎片的计划，她对供奉院亚里沙等展开攻击。' },
-  { year: '第18集', title: '自我发现', description: '找回真实记忆并向集告白，为保护集迎战涯派来的人，展现超凡战力，最终被囚禁于实验设施。' },
-  { year: '第20集', title: '抵抗真名', description: '真名通过祈的身体与涯对话，宣称“还差一点她就可以完全属于我了”，祈强力抵抗，拒绝屈服。' },
-  { year: '第21集', title: '化为真名', description: '被涯消除所有情感与记忆，留下只集能听到的歌与一滴眼泪，祈的生命化为病毒真名。' },
-  { year: '第22集', title: '生命延续', description: '集击败涯后欲舍身，祈以生命线代替集逝去，意识永存于集心中，完成对集的终极守护。' }
+const timeline = ref([
+  {
+    year: "第1集 开场",
+    title: "潜入GHQ研究所",
+    description:
+      "为窃取罪恶王冠的“钥匙”潜入湖畔研究所，成功偷取后被流弹击中跌入湖中；后被樱满集发现并救起。",
+  },
+  {
+    year: "第1-2集",
+    title: "同居与觉醒",
+    description:
+      "转校至集的班级并与其同居，祈对集制作的VCR产生好感，逐渐萌发自我意识与对集的情感。",
+  },
+  {
+    year: "第4-10集",
+    title: "并肩作战",
+    description:
+      "作为葬仪社成员，参与多次潜入和救援任务，与集建立深厚信任，并在战斗中相互依靠。",
+  },
+  {
+    year: "第11集",
+    title: "共鸣数测量",
+    description:
+      "集的母亲测得祈的基因共鸣数超3000，基因检测仪显示“OVER”，彰显其虚空力量异常强大。",
+  },
+  {
+    year: "第16-17集",
+    title: "被病毒操控",
+    description:
+      "真名记忆与思考的病毒被注入祈体内，为完成回收遗传因子与虚空碎片的计划，她对供奉院亚里沙等展开攻击。",
+  },
+  {
+    year: "第18集",
+    title: "自我发现",
+    description:
+      "找回真实记忆并向集告白，为保护集迎战涯派来的人，展现超凡战力，最终被囚禁于实验设施。",
+  },
+  {
+    year: "第20集",
+    title: "抵抗真名",
+    description:
+      "真名通过祈的身体与涯对话，宣称“还差一点她就可以完全属于我了”，祈强力抵抗，拒绝屈服。",
+  },
+  {
+    year: "第21集",
+    title: "化为真名",
+    description:
+      "被涯消除所有情感与记忆，留下只集能听到的歌与一滴眼泪，祈的生命化为病毒真名。",
+  },
+  {
+    year: "第22集",
+    title: "生命延续",
+    description:
+      "集击败涯后欲舍身，祈以生命线代替集逝去，意识永存于集心中，完成对集的终极守护。",
+  },
 ]);
 
 onMounted(() => {
@@ -68,12 +120,12 @@ onMounted(() => {
     currentIndex.value = (currentIndex.value + 1) % randomFive.value.length;
   }, 5000);
 
-  const items = document.querySelectorAll<HTMLElement>('.timeline-item');
+  const items = document.querySelectorAll<HTMLElement>(".timeline-item");
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
+          entry.target.classList.add("in-view");
           observer.unobserve(entry.target);
         }
       });
@@ -125,7 +177,6 @@ onMounted(() => {
   z-index: 1;
 }
 
-
 .timeline-container {
   position: relative;
   max-width: 900px;
@@ -145,14 +196,18 @@ onMounted(() => {
   position: relative;
 
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
     width: 2px;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3));
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.3)
+    );
   }
 }
 
