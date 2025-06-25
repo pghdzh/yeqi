@@ -48,7 +48,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import inoriImg from '@/assets/img/楪祈1.png'
+import inoriImg from '@/assets/img/楪祈5.png'
 import { ref, onMounted, onUnmounted } from 'vue';
 
 

@@ -49,7 +49,14 @@
           </div>
           <div v-if="loading" class="message bot" key="loading">
             <div class="avatar bot"></div>
-            <div class="bubble loading">正在思考中</div>
+            <div class="bubble loading">
+              正在思考中
+              <span class="dots">
+                <span class="dot">.</span>
+                <span class="dot">.</span>
+                <span class="dot">.</span>
+              </span>
+            </div>
           </div>
         </transition-group>
       </div>
@@ -79,7 +86,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick, watch, onUnmounted } from "vue";
-import { sendMessageToChatGPT } from "@/api/opaiApi";
+import { sendMessageToYuzuriha } from "@/api/deepseekApi";
 
 // 楪祈演唱歌曲列表
 type Song = { id: number; title: string; file: string };
@@ -281,7 +288,7 @@ async function sendMessage() {
   loading.value = true;
   try {
     const filteredLog = chatLog.value.filter((msg) => !msg.isEgg);
-    const botReply = await sendMessageToChatGPT(userText, filteredLog);
+    const botReply = await sendMessageToYuzuriha(userText, filteredLog);
     chatLog.value.push({
       id: Date.now() + 1,
       role: "bot",
@@ -628,6 +635,36 @@ onUnmounted(() => {
 .message.error .bubble {
   background: rgba(255, 51, 102, 0.4);
   border: 1px solid #ff3366;
+}
+
+.dots {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+}
+.dot {
+  opacity: 0;
+  font-size: 16px;
+  animation: blink 1s infinite;
+}
+.dot:nth-child(1) {
+  animation-delay: 0s;
+}
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .loading {

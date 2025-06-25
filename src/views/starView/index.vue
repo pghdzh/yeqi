@@ -23,6 +23,14 @@
           <i class="iconfont icon-dot"></i>{{ item }}
         </li>
       </ul>
+      <a
+        href="https://message.bilibili.com/?spm_id_from=333.1387.0.0#/whisper/mid372611876"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="bilibili-button"
+      >
+        打开B站私信
+      </a>
     </aside>
 
     <!-- 主要内容展示 -->
@@ -206,7 +214,8 @@ let timer: number;
 
 // 示例公告数据
 const announcements = [
-  "我B站账号被封了一个月，应该是6.9解封，期间无法互动，请见谅",
+  "优化了一下楪祈的人设，人设固定位动漫结束的时间点，新增了集的对话页面。",
+  "有什么意见建议都可以点击下面按钮给我发私信哦，如果采纳了我会把昵称加在首页哦",
 ];
 
 // 生成随机柔和的 HSL
@@ -217,7 +226,7 @@ function randomSoftHsl() {
   return `hsl(${h}, ${s}%, ${l}%)`;
 }
 
-const names = ["无机甲亢", "祈愿丶楪祈"];
+const names = ["无机甲亢", "祈愿丶楪祈", "超级小萌新3"];
 const stars = ref(
   names.map((name) => ({
     name,
@@ -320,6 +329,29 @@ onBeforeUnmount(() => {
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   z-index: 2;
+}
+
+.bilibili-button {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 16px;
+  background: linear-gradient(135deg, #00a1d6, #8be9fd);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  box-shadow: 0 0 10px rgba(0, 161, 214, 0.6);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bilibili-button:hover {
+  box-shadow: 0 0 16px rgba(0, 161, 214, 0.8), 0 0 4px #fff;
+  transform: translateY(-2px);
 }
 
 .announcement-title {

@@ -36,6 +36,10 @@ const router = createRouter({
       component: () => import("@/views/yeqiChatView/index.vue"),
     },
     {
+      path: "/jiChat",
+      component: () => import("@/views/jiChatView/index.vue"),
+    },
+    {
       path: "/luckDraw",
       component: () => import("@/views/LuckyDraw/index.vue"),
     },
