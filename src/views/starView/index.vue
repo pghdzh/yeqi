@@ -4,13 +4,8 @@
     <canvas ref="canvasEl" class="rose-canvas"></canvas>
     <!-- 背景轮播放在最底层 -->
     <div class="carousel">
-      <img
-        v-for="(src, idx) in randomFive"
-        :key="idx"
-        :src="src"
-        class="carousel-image"
-        :class="{ active: idx === currentIndex }"
-      />
+      <img v-for="(src, idx) in randomFive" :key="idx" :src="src" class="carousel-image"
+        :class="{ active: idx === currentIndex }" />
     </div>
     <!-- 公告栏 -->
     <aside class="announcement-bar">
@@ -23,12 +18,8 @@
           <i class="iconfont icon-dot"></i>{{ item }}
         </li>
       </ul>
-      <a
-        href="https://message.bilibili.com/?spm_id_from=333.1387.0.0#/whisper/mid372611876"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="bilibili-button"
-      >
+      <a href="https://message.bilibili.com/?spm_id_from=333.1387.0.0#/whisper/mid372611876" target="_blank"
+        rel="noopener noreferrer" class="bilibili-button">
         打开B站私信
       </a>
     </aside>
@@ -48,19 +39,14 @@
 
     <!-- 名字改到右下角 -->
     <div class="starry-names right">
-      <span
-        v-for="(star, idx) in stars"
-        :key="idx"
-        class="star-name"
-        :style="{
-          right: star.left + '%',
-          bottom: star.bottom + 'px',
-          fontSize: 14 + star.size + 'px',
-          color: star.color,
-          animationDelay: star.flickerDelay + 's',
-          animationDuration: star.flickerDuration + 's',
-        }"
-      >
+      <span v-for="(star, idx) in stars" :key="idx" class="star-name" :style="{
+        right: star.left + '%',
+        bottom: star.bottom + 'px',
+        fontSize: 14 + star.size + 'px',
+        color: star.color,
+        animationDelay: star.flickerDelay + 's',
+        animationDuration: star.flickerDuration + 's',
+      }">
         {{ star.name }}
       </span>
     </div>
@@ -485,14 +471,12 @@ onBeforeUnmount(() => {
   z-index: 0;
 
   /* 动态线性渐变背景 */
-  background: linear-gradient(
-    270deg,
-    #ff79c6,
-    #bd93f9,
-    #8be9fd,
-    #bd93f9,
-    #ff79c6
-  );
+  background: linear-gradient(270deg,
+      #ff79c6,
+      #bd93f9,
+      #8be9fd,
+      #bd93f9,
+      #ff79c6);
   background-size: 600% 600%;
   animation: neonGradient 10s ease infinite;
   opacity: 0.9;
@@ -505,11 +489,9 @@ onBeforeUnmount(() => {
     left: 0;
     width: 100%;
     height: 40px;
-    background: radial-gradient(
-      circle at center bottom,
-      rgba(255, 121, 198, 0.4),
-      transparent
-    );
+    background: radial-gradient(circle at center bottom,
+        rgba(255, 121, 198, 0.4),
+        transparent);
     pointer-events: none;
   }
 
@@ -551,6 +533,7 @@ onBeforeUnmount(() => {
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     box-shadow: 0 0 20px rgba(255, 121, 198, 0.6);
@@ -562,6 +545,7 @@ onBeforeUnmount(() => {
 }
 
 @keyframes flicker {
+
   0%,
   100% {
     opacity: 1;
@@ -569,6 +553,12 @@ onBeforeUnmount(() => {
 
   50% {
     opacity: 0.3;
+  }
+}
+
+@media (max-width:768px) {
+  .announcement-bar {
+    display: none;
   }
 }
 </style>
