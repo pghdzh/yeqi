@@ -56,7 +56,7 @@ export async function sendMessageToYuzuriha(
 
     // 发送请求到 DeepSeek API
     const response = await deepseekApi.post("/chat/completions", {
-      model: "deepseek-reasoner", // DeepSeek 专用模型
+      model: "deepseek-chat", // DeepSeek 专用模型
       messages,
       temperature: 0.7, // 控制回复的随机性
       max_tokens: 300, // 限制回复长度
@@ -96,7 +96,7 @@ export async function sendMessageToJi(
 
     // 发送请求到 DeepSeek API
     const response = await deepseekApi.post("/chat/completions", {
-      model: "deepseek-reasoner", // DeepSeek 专用模型
+      model: "deepseek-chat", // DeepSeek 专用模型
       messages,
       temperature: 0.7, // 控制回复的随机性
       max_tokens: 300, // 限制回复长度

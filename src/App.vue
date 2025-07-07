@@ -44,7 +44,7 @@ const showHeader = ref(false)
 
 /* 点在这里也能触发显示，默认给个 20px 高度 */
 .hover-zone {
-  height: 20px;
+  height: 60px;
   background: transparent;
 }
 

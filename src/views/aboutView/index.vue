@@ -83,7 +83,7 @@ const NAME_STORAGE_KEY = 'yuzuriha_message_board_name'
 async function fetchMessages() {
   loading.value = true
   try {
-    const res = await getMessageList({ page: 1, pageSize: 50 }) // 简单分页
+    const res = await getMessageList({ page: 1, pageSize: 9999 }) // 简单分页
     messages.value = res.data || []
   } catch (err) {
     console.error('获取留言失败', err)

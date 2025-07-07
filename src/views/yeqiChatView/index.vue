@@ -7,41 +7,26 @@
     <button class="download-voice-btn" @click="downloadArchive">
       下载语音⬇️
     </button>
-
-    <div class="playlist">
-      <h4>歌单</h4>
-      <ul>
-        <li v-for="song in songs" :key="song.id">
-          <button @click="playSong(song)">{{ song.title }}</button>
-        </li>
-      </ul>
-      <button v-if="isPlaying" @click="stopSong" style="margin-top: 8px">
-        ⏹ 停止播放
-      </button>
-    </div>
+    <button class="random-song-btn" @click="playRandomSong">
+      播放歌曲
+    </button>
+    <button class="stop-song-btn" @click="stopSong">
+      ⏹ 停止播放
+    </button>
     <!-- 背景轮播放在最底层 -->
     <div class="carousel">
-      <img
-        v-for="(src, idx) in randomFive"
-        :key="idx"
-        :src="src"
-        class="carousel-image"
-        :class="{ active: idx === currentIndex }"
-      />
+      <img v-for="(src, idx) in randomFive" :key="idx" :src="src" class="carousel-image"
+        :class="{ active: idx === currentIndex }" />
     </div>
     <div class="chat-container">
       <div class="messages" ref="msgList">
         <transition-group name="msg" tag="div">
-          <div
-            v-for="msg in chatLog"
-            :key="msg.id"
-            :class="[
-              'message',
-              msg.role,
-              { error: msg.isError },
-              { isEgg: msg.isEgg },
-            ]"
-          >
+          <div v-for="msg in chatLog" :key="msg.id" :class="[
+            'message',
+            msg.role,
+            { error: msg.isError },
+            { isEgg: msg.isEgg },
+          ]">
             <div class="avatar" :class="msg.role"></div>
             <div class="bubble">
               <div class="content" v-html="msg.text"></div>
@@ -61,25 +46,18 @@
         </transition-group>
       </div>
       <form class="input-area" @submit.prevent="sendMessage">
-        <input
-          v-model="input"
-          type="text"
-          placeholder="向楪祈提问…"
-          :disabled="loading"
-          @keydown="handleKeydown"
-        />
-        <button type="submit" :disabled="!input.trim() || loading">发送</button>
+        <input v-model="input" type="text" placeholder="向楪祈提问…" :disabled="loading" @keydown="handleKeydown" />
+      </form>
+      <div class="bottomBtn">
+
         <button type="button" class="clear-btn" @click="clearChat">
           清空全部
         </button>
-        <button
-          type="button"
-          class="voice-btn"
-          @click="isVoiceEnabled = !isVoiceEnabled"
-        >
+        <button type="button" class="voice-btn" @click="isVoiceEnabled = !isVoiceEnabled">
           {{ isVoiceEnabled ? "语音开启🔊" : "语音关闭🔇" }}
         </button>
-      </form>
+        <button type="submit" :disabled="!input.trim() || loading">发送</button>
+      </div>
     </div>
   </div>
 </template>
@@ -123,6 +101,17 @@ function playSong(song: Song) {
   isPlaying.value = true;
   scrollToBottom();
 }
+let lastIndex: number | null = null;
+
+function playRandomSong() {
+  let idx: number;
+  do {
+    idx = Math.floor(Math.random() * songs.length);
+  } while (songs.length > 1 && idx === lastIndex);
+  lastIndex = idx;
+  playSong(songs[idx]);
+}
+
 function stopSong() {
   isPlaying.value = false;
   if (currentAudio) {
@@ -378,60 +367,53 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .chat-page {
   height: 100vh;
-  background: linear-gradient(135deg, #ff79c6, #bd93f9, #8be9fd);
-  background-size: 600% 600%;
-  animation: gradient-flow 20s ease infinite;
   color: #fff;
   display: flex;
   flex-direction: column;
   padding-top: 64px;
 }
 
-.playlist {
+.random-song-btn {
   position: fixed;
-  top: 80px;
   right: 16px;
-  width: 180px;
-  max-height: 60vh;
-  overflow-y: auto;
-  background: rgba(30, 30, 47, 0.8);
-  padding: 12px;
-  border-radius: 8px;
-  z-index: 100;
+  top: 64px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 12px rgba(255, 137, 207, 0.6);
   color: #fff;
-}
-.playlist h4 {
-  margin: 0 0 8px;
-  font-size: 16px;
-  text-align: center;
-}
-.playlist ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.playlist li + li {
-  margin-top: 6px;
-}
-.playlist button {
-  width: 100%;
-  padding: 4px 6px;
-  text-align: left;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  border-radius: 4px;
-  color: #fff;
+  border-radius: 24px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: transform 0.2s, background 0.3s;
+  z-index: 10;
   cursor: pointer;
 }
-.playlist button:hover {
-  background: rgba(255, 255, 255, 0.2);
+
+.random-song-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.stop-song-btn {
+  @extend .random-song-btn;
+  right: 124px; // 可根据实际布局调整位置
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 12px rgba(137, 196, 255, 0.6);
+}
+
+.stop-song-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
 }
 
 /* 修改：按钮更贴合页面风格，半透明玻璃质感 + 边框光晕 */
 .random-voice-btn {
   position: fixed;
   left: 16px;
-  top: 84px;
+  top: 64px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -452,7 +434,7 @@ onUnmounted(() => {
 
 .download-voice-btn {
   @extend .random-voice-btn;
-  top: 124px; // 可根据实际布局调整位置
+  left: 124px; // 可根据实际布局调整位置
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -464,27 +446,18 @@ onUnmounted(() => {
   transform: scale(1.05);
 }
 
-@keyframes gradient-flow {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-}
 
 .chat-container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   padding: 16px;
   gap: 12px;
   position: relative;
   height: 100%;
+  padding-top: 40px;
 }
 
 .carousel {
@@ -525,7 +498,7 @@ onUnmounted(() => {
   flex: 1;
   overflow-y: auto;
   padding-right: 8px;
-  padding-bottom: 100px;
+  padding-bottom: 64px;
   /* 为输入框留出空间 */
   scroll-behavior: smooth;
 }
@@ -588,11 +561,9 @@ onUnmounted(() => {
 /* 修改：彩蛋消息气泡添加柔和光晕和文字阴影 */
 .message.bot.isEgg .bubble {
   background: rgba(255, 255, 255, 0.9);
-  background: linear-gradient(
-    135deg,
-    rgba(255, 137, 207, 0.8),
-    rgba(137, 196, 255, 0.8)
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 137, 207, 0.8),
+      rgba(137, 196, 255, 0.8));
   color: #222;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0 4px 12px rgba(255, 137, 207, 0.4),
@@ -606,6 +577,7 @@ onUnmounted(() => {
 
 /* 轻微抖动效果 */
 @keyframes shake {
+
   0%,
   100% {
     transform: translateX(0);
@@ -642,26 +614,32 @@ onUnmounted(() => {
   align-items: center;
   margin-left: 4px;
 }
+
 .dot {
   opacity: 0;
   font-size: 16px;
   animation: blink 1s infinite;
 }
+
 .dot:nth-child(1) {
   animation-delay: 0s;
 }
+
 .dot:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .dot:nth-child(3) {
   animation-delay: 0.4s;
 }
 
 @keyframes blink {
+
   0%,
   100% {
     opacity: 0;
   }
+
   50% {
     opacity: 1;
   }
@@ -673,51 +651,59 @@ onUnmounted(() => {
 
 .input-area {
   position: sticky;
-  bottom: 0;
-  display: flex;
+  bottom: 64px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 24px;
   backdrop-filter: blur(6px);
   padding: 8px;
   gap: 8px;
   z-index: 10;
+
+  input {
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    width: 100%;
+  }
+
+  input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
 }
 
-.input-area input {
-  flex: 1;
-  padding: 12px 20px;
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 16px;
-  outline: none;
-  width: 50vw;
+.bottomBtn {
+  position: sticky;
+  bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+
+  button {
+    background: linear-gradient(to right, #ff79c6, #bd93f9);
+    border: none;
+    color: #fff;
+    padding: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+
+  }
+
+  button.clear-btn {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(6px);
+    color: #fff;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
 }
 
-.input-area input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.input-area button {
-  background: linear-gradient(to right, #ff79c6, #bd93f9);
-  border: none;
-  color: #fff;
-  padding: 0 20px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.input-area button.clear-btn {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(6px);
-  color: #fff;
-}
-
-.input-area button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 
 /* 入场动画 */
 .msg-enter-active,
@@ -755,6 +741,14 @@ onUnmounted(() => {
   .bubble {
     max-width: 80%;
     font-size: 14px;
+  }
+
+  .download-voice-btn {
+    display: none;
+  }
+
+  .stop-song-btn {
+    display: none;
   }
 }
 </style>
