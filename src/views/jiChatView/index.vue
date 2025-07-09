@@ -64,7 +64,7 @@ import { ref, onMounted, nextTick, watch, onUnmounted } from "vue";
 import { sendMessageToJi } from "@/api/deepseekApi";
 
 // 1. 全量导入，直接映射成 string[]
-const modules = import.meta.glob("@/assets/images1/*.{jpg,png,jpeg}", {
+const modules = import.meta.glob("@/assets/images1/*.{jpg,png,jpeg,webp}", {
   eager: true,
 });
 const allSrcs: string[] = Object.values(modules).map((mod: any) => mod.default);

@@ -2,8 +2,13 @@
   <div class="message-board-page">
     <!-- 背景轮播放在最底层 -->
     <div class="carousel">
-      <img v-for="(src, idx) in randomFive" :key="idx" :src="src" class="carousel-image"
-        :class="{ active: idx === currentIndex }" />
+      <img
+        v-for="(src, idx) in randomFive"
+        :key="idx"
+        :src="src"
+        class="carousel-image"
+        :class="{ active: idx === currentIndex }"
+      />
     </div>
     <main class="board-container">
       <h2 class="board-title">留言板</h2>
@@ -25,12 +30,21 @@
 
         <!-- 粘性表单 -->
         <form class="message-form" @submit.prevent="postMessage">
-          <input v-model="newName" type="text" placeholder="昵称" required class="input name-input" />
-          <textarea v-model="newContent" rows="4" placeholder="留下你的想法..." required
-            class="input content-input"></textarea>
-          <button type="submit" class="submit-button">
-            提交留言
-          </button>
+          <input
+            v-model="newName"
+            type="text"
+            placeholder="昵称"
+            required
+            class="input name-input"
+          />
+          <textarea
+            v-model="newContent"
+            rows="4"
+            placeholder="留下你的想法..."
+            required
+            class="input content-input"
+          ></textarea>
+          <button type="submit" class="submit-button">提交留言</button>
         </form>
       </div>
     </main>
@@ -38,13 +52,12 @@
 </template>
 
 <script setup lang="ts">
-import { getMessageList, createMessage } from '@/api/modules/message' // 按实际路径修改
+import { getMessageList, createMessage } from "@/api/modules/message"; // 按实际路径修改
 
-import { ref, onMounted, onUnmounted } from 'vue';
-
+import { ref, onMounted, onUnmounted } from "vue";
 
 // 1. 全量导入，直接映射成 string[]
-const modules = import.meta.glob("@/assets/images1/*.{jpg,png,jpeg}", {
+const modules = import.meta.glob("@/assets/images1/*.{jpg,png,jpeg,webp}", {
   eager: true,
 });
 const allSrcs: string[] = Object.values(modules).map((mod: any) => mod.default);
@@ -63,81 +76,77 @@ const randomFive = ref<string[]>(shuffle(allSrcs).slice(0, 5));
 const currentIndex = ref(0);
 let timer: number;
 
-
-
-
 interface Message {
-  id: number
-  name: string
-  content: string
-  created_at: string
+  id: number;
+  name: string;
+  content: string;
+  created_at: string;
 }
 
-const messages = ref<Message[]>([])
-const newName = ref('')
-const newContent = ref('')
-const loading = ref(false)
-const NAME_STORAGE_KEY = 'yuzuriha_message_board_name'
+const messages = ref<Message[]>([]);
+const newName = ref("");
+const newContent = ref("");
+const loading = ref(false);
+const NAME_STORAGE_KEY = "yuzuriha_message_board_name";
 
 // 获取留言列表
 async function fetchMessages() {
-  loading.value = true
+  loading.value = true;
   try {
-    const res = await getMessageList({ page: 1, pageSize: 9999 }) // 简单分页
-    messages.value = res.data || []
+    const res = await getMessageList({ page: 1, pageSize: 9999 }); // 简单分页
+    messages.value = res.data || [];
   } catch (err) {
-    console.error('获取留言失败', err)
+    console.error("获取留言失败", err);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
 // 发布留言
 async function postMessage() {
-  if (!newName.value.trim() || !newContent.value.trim()) return
+  if (!newName.value.trim() || !newContent.value.trim()) return;
 
   try {
     await createMessage({
       name: newName.value.trim(),
-      content: newContent.value.trim()
-    })
+      content: newContent.value.trim(),
+    });
     // 保存昵称到 localStorage
-    localStorage.setItem(NAME_STORAGE_KEY, newName.value.trim())
-    newContent.value = ''
-    await fetchMessages()
+    localStorage.setItem(NAME_STORAGE_KEY, newName.value.trim());
+    newContent.value = "";
+    await fetchMessages();
   } catch (err) {
-    console.error('提交失败', err)
+    console.error("提交失败", err);
   }
 }
 
 // 时间格式化
 function formatTime(input: string) {
-  const d = new Date(input)
-  const YYYY = d.getFullYear()
-  const MM = String(d.getMonth() + 1).padStart(2, '0')
-  const DD = String(d.getDate()).padStart(2, '0')
-  const hh = String(d.getHours()).padStart(2, '0')
-  const mm = String(d.getMinutes()).padStart(2, '0')
-  return `${YYYY}-${MM}-${DD} ${hh}:${mm}`
+  const d = new Date(input);
+  const YYYY = d.getFullYear();
+  const MM = String(d.getMonth() + 1).padStart(2, "0");
+  const DD = String(d.getDate()).padStart(2, "0");
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  return `${YYYY}-${MM}-${DD} ${hh}:${mm}`;
 }
 
 // onMounted 初始化昵称 & 拉取留言
 onMounted(() => {
-  const savedName = localStorage.getItem(NAME_STORAGE_KEY)
-  if (savedName) newName.value = savedName
+  const savedName = localStorage.getItem(NAME_STORAGE_KEY);
+  if (savedName) newName.value = savedName;
 
-  fetchMessages()
+  fetchMessages();
 
   // 2. 每 5 秒切换一次
   timer = window.setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % randomFive.value.length;
   }, 5000);
-})
+});
 
 onUnmounted(() => {
   clearInterval(timer);
 });
-
 </script>
 
 <style scoped lang="scss">
@@ -199,7 +208,6 @@ onUnmounted(() => {
   pointer-events: none;
   z-index: 1;
 }
-
 
 .board-container {
   display: flex;

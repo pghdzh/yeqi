@@ -34,7 +34,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 
 // 1. 全量导入，直接映射成 string[]
-const modules = import.meta.glob("@/assets/images2/*.{jpg,png,jpeg}", {
+const modules = import.meta.glob("@/assets/images2/*.{jpg,png,jpeg,webp}", {
   eager: true,
 });
 const allSrcs: string[] = Object.values(modules).map((mod: any) => mod.default);

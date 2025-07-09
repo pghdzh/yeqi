@@ -1,6 +1,5 @@
 <template>
   <div class="gallery-container">
-
     <button class="upload-btn" @click="openUploadModal">上传图片</button>
 
     <section class="gallery section">
@@ -10,9 +9,20 @@
         </button>
       </div>
       <div class="gallery-grid">
-        <div v-for="(img, index) in images" :key="img.id" class="card" @click="openLightbox(index)" ref="cards">
+        <div
+          v-for="(img, index) in images"
+          :key="img.id"
+          class="card"
+          @click="openLightbox(index)"
+          ref="cards"
+        >
           <div class="card-inner">
-            <img :src="img.src" :alt="img.alt" loading="lazy" @load="onImageLoad($event)" />
+            <img
+              :src="img.src"
+              :alt="img.alt"
+              loading="lazy"
+              @load="onImageLoad($event)"
+            />
             <div class="overlay">
               <span>查看大图</span>
             </div>
@@ -32,11 +42,16 @@
     <aside class="ranking-panel">
       <div class="panel-header" @click="expanded = !expanded">
         <h3 class="ranking-title">上传排行榜</h3>
-        <span class="toggle-icon">{{ expanded ? '收起▾' : '展开▸' }}</span>
+        <span class="toggle-icon">{{ expanded ? "收起▾" : "展开▸" }}</span>
       </div>
       <transition name="fade">
         <ul v-if="expanded" class="ranking-list">
-          <li v-for="(item, idx) in rankingList" :key="idx" class="ranking-item" :class="`rank-${idx + 1}`">
+          <li
+            v-for="(item, idx) in rankingList"
+            :key="idx"
+            class="ranking-item"
+            :class="`rank-${idx + 1}`"
+          >
             <span class="rank">{{ idx + 1 }}</span>
             <span class="name">{{ item.nickname }}</span>
             <span class="count">{{ item.count }} 张</span>
@@ -53,7 +68,11 @@
     </div>
 
     <!-- 上传弹窗 -->
-    <div v-if="uploadModalOpen" class="upload-modal-overlay" @click.self="closeUploadModal">
+    <div
+      v-if="uploadModalOpen"
+      class="upload-modal-overlay"
+      @click.self="closeUploadModal"
+    >
       <div class="upload-modal">
         <h3>批量上传图片</h3>
         <div class="tip-container">
@@ -77,7 +96,13 @@
         </label>
         <label>
           选择图片（最多 {{ remaining }} 张）：
-          <input ref="fileInput" type="file" multiple accept="image/*" @change="handleFileSelect" />
+          <input
+            ref="fileInput"
+            type="file"
+            multiple
+            accept="image/*"
+            @change="handleFileSelect"
+          />
         </label>
         <p class="tip" v-if="selectedFiles.length">
           已选 {{ selectedFiles.length }} 张
@@ -92,8 +117,13 @@
     </div>
 
     <div class="floating-chibis">
-      <img v-for="(pet, i) in chibiList" :key="i" :src="pet.src" :style="{ top: pet.top + 'px', left: pet.left + 'px' }"
-        class="chibi-img" />
+      <img
+        v-for="(pet, i) in chibiList"
+        :key="i"
+        :src="pet.src"
+        :style="{ top: pet.top + 'px', left: pet.left + 'px' }"
+        class="chibi-img"
+      />
     </div>
   </div>
 </template>
@@ -165,14 +195,14 @@ interface RankingItem {
   count: number;
 }
 const rankingList = ref<RankingItem[]>([]);
-const expanded = ref(true)
+const expanded = ref(true);
 
 // 默认分页参数（如不分页可省略）
 const page = 1;
 const pageSize = 99;
 
 const fetchRanking = async () => {
-  const res = await getRankingList({ page, pageSize, character_key: "yeqi", });
+  const res = await getRankingList({ page, pageSize, character_key: "yeqi" });
   if (res.success) {
     rankingList.value = res.data;
   } else {
@@ -377,7 +407,11 @@ async function submitUpload() {
   if (!canSubmit.value) return;
   isUploading.value = true;
   try {
-    const res = await uploadImages(selectedFiles.value, nickname.value.trim(), 'yeqi');
+    const res = await uploadImages(
+      selectedFiles.value,
+      nickname.value.trim(),
+      "yeqi"
+    );
     const uploadedCount = res.data.length;
     // 更新 localStorage
     uploadedToday.value += uploadedCount;
@@ -576,7 +610,6 @@ $highlight: #ffd700;
     margin: 0 auto;
 
     .sort-controls {
-
       margin: 16px 0;
 
       .sort-btn {
@@ -588,22 +621,24 @@ $highlight: #ffd700;
         cursor: pointer;
         font-size: 1rem;
         font-family: "Helvetica Neue", sans-serif;
-        box-shadow: 0 6px 20px rgba(218, 112, 214, 0.5), 0 0 8px rgba(255, 142, 196, 0.7);
+        box-shadow: 0 6px 20px rgba(218, 112, 214, 0.5),
+          0 0 8px rgba(255, 142, 196, 0.7);
         transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
 
         &:hover {
           transform: scale(1.05);
           background: linear-gradient(135deg, #fff0fb, #ffc0e8);
           color: #3d004d;
-          box-shadow: 0 8px 30px rgba(218, 112, 214, 0.7), 0 0 12px rgba(255, 142, 196, 0.9);
+          box-shadow: 0 8px 30px rgba(218, 112, 214, 0.7),
+            0 0 12px rgba(255, 142, 196, 0.9);
         }
 
         &:active {
           transform: scale(0.98);
-          box-shadow: 0 4px 12px rgba(218, 112, 214, 0.4), 0 0 6px rgba(255, 142, 196, 0.6);
+          box-shadow: 0 4px 12px rgba(218, 112, 214, 0.4),
+            0 0 6px rgba(255, 142, 196, 0.6);
         }
       }
-
     }
 
     .gallery-grid {
@@ -621,7 +656,6 @@ $highlight: #ffd700;
         }
 
         &.loaded {
-
           // Blur-up & grayscale removed
           .card-inner img {
             filter: none;
@@ -821,14 +855,16 @@ $highlight: #ffd700;
     font-family: "Helvetica Neue", sans-serif;
     border: none;
     border-radius: 30px;
-    box-shadow: 0 8px 30px rgba(218, 112, 214, 0.5), 0 0 8px rgba(255, 142, 196, 0.7);
+    box-shadow: 0 8px 30px rgba(218, 112, 214, 0.5),
+      0 0 8px rgba(255, 142, 196, 0.7);
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.3s;
     z-index: 10;
 
     &:hover {
       transform: scale(1.1);
-      box-shadow: 0 12px 40px rgba(218, 112, 214, 0.7), 0 0 12px rgba(255, 142, 196, 0.9);
+      box-shadow: 0 12px 40px rgba(218, 112, 214, 0.7),
+        0 0 12px rgba(255, 142, 196, 0.9);
       background: linear-gradient(135deg, #fff0fb, #ffc0e8);
       color: #3d004d;
     }
@@ -997,7 +1033,8 @@ $highlight: #ffd700;
     background: rgba(20, 0, 30, 0.8);
     backdrop-filter: blur(6px);
     border-radius: 18px;
-    box-shadow: 0 8px 30px rgba(218, 112, 214, 0.6), 0 0 12px rgba(255, 142, 196, 0.4);
+    box-shadow: 0 8px 30px rgba(218, 112, 214, 0.6),
+      0 0 12px rgba(255, 142, 196, 0.4);
     position: fixed;
     top: 60px;
     right: 24px;
@@ -1103,6 +1140,5 @@ $highlight: #ffd700;
       opacity: 0;
     }
   }
-
 }
 </style>

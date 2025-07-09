@@ -7,26 +7,31 @@
     <button class="download-voice-btn" @click="downloadArchive">
       下载语音⬇️
     </button>
-    <button class="random-song-btn" @click="playRandomSong">
-      播放歌曲
-    </button>
-    <button class="stop-song-btn" @click="stopSong">
-      ⏹ 停止播放
-    </button>
+    <button class="random-song-btn" @click="playRandomSong">播放歌曲</button>
+    <button class="stop-song-btn" @click="stopSong">⏹ 停止播放</button>
     <!-- 背景轮播放在最底层 -->
     <div class="carousel">
-      <img v-for="(src, idx) in randomFive" :key="idx" :src="src" class="carousel-image"
-        :class="{ active: idx === currentIndex }" />
+      <img
+        v-for="(src, idx) in randomFive"
+        :key="idx"
+        :src="src"
+        class="carousel-image"
+        :class="{ active: idx === currentIndex }"
+      />
     </div>
     <div class="chat-container">
       <div class="messages" ref="msgList">
         <transition-group name="msg" tag="div">
-          <div v-for="msg in chatLog" :key="msg.id" :class="[
-            'message',
-            msg.role,
-            { error: msg.isError },
-            { isEgg: msg.isEgg },
-          ]">
+          <div
+            v-for="msg in chatLog"
+            :key="msg.id"
+            :class="[
+              'message',
+              msg.role,
+              { error: msg.isError },
+              { isEgg: msg.isEgg },
+            ]"
+          >
             <div class="avatar" :class="msg.role"></div>
             <div class="bubble">
               <div class="content" v-html="msg.text"></div>
@@ -45,18 +50,33 @@
           </div>
         </transition-group>
       </div>
-      <form class="input-area" @submit.prevent="sendMessage">
-        <input v-model="input" type="text" placeholder="向楪祈提问…" :disabled="loading" @keydown="handleKeydown" />
+      <form class="input-area">
+        <input
+          v-model="input"
+          type="text"
+          placeholder="向楪祈提问…"
+          :disabled="loading"
+          @keydown="handleKeydown"
+        />
       </form>
       <div class="bottomBtn">
-
         <button type="button" class="clear-btn" @click="clearChat">
           清空全部
         </button>
-        <button type="button" class="voice-btn" @click="isVoiceEnabled = !isVoiceEnabled">
+        <button
+          type="button"
+          class="voice-btn"
+          @click="isVoiceEnabled = !isVoiceEnabled"
+        >
           {{ isVoiceEnabled ? "语音开启🔊" : "语音关闭🔇" }}
         </button>
-        <button type="submit" :disabled="!input.trim() || loading">发送</button>
+        <button
+          type="button"
+          :disabled="!input.trim() || loading"
+          @click="sendMessage"
+        >
+          发送
+        </button>
       </div>
     </div>
   </div>
@@ -213,7 +233,7 @@ function playRandomAudio() {
 }
 
 // 1. 全量导入，直接映射成 string[]
-const modules = import.meta.glob("@/assets/images1/*.{jpg,png,jpeg}", {
+const modules = import.meta.glob("@/assets/images1/*.{jpg,png,jpeg,webp}", {
   eager: true,
 });
 const allSrcs: string[] = Object.values(modules).map((mod: any) => mod.default);
@@ -446,7 +466,6 @@ onUnmounted(() => {
   transform: scale(1.05);
 }
 
-
 .chat-container {
   flex: 1;
   display: flex;
@@ -561,9 +580,11 @@ onUnmounted(() => {
 /* 修改：彩蛋消息气泡添加柔和光晕和文字阴影 */
 .message.bot.isEgg .bubble {
   background: rgba(255, 255, 255, 0.9);
-  background: linear-gradient(135deg,
-      rgba(255, 137, 207, 0.8),
-      rgba(137, 196, 255, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 137, 207, 0.8),
+    rgba(137, 196, 255, 0.8)
+  );
   color: #222;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0 4px 12px rgba(255, 137, 207, 0.4),
@@ -577,7 +598,6 @@ onUnmounted(() => {
 
 /* 轻微抖动效果 */
 @keyframes shake {
-
   0%,
   100% {
     transform: translateX(0);
@@ -634,7 +654,6 @@ onUnmounted(() => {
 }
 
 @keyframes blink {
-
   0%,
   100% {
     opacity: 0;
@@ -688,7 +707,6 @@ onUnmounted(() => {
     font-weight: bold;
     cursor: pointer;
     transition: background 0.3s;
-
   }
 
   button.clear-btn {
@@ -701,9 +719,7 @@ onUnmounted(() => {
     opacity: 0.5;
     cursor: not-allowed;
   }
-
 }
-
 
 /* 入场动画 */
 .msg-enter-active,
@@ -744,10 +760,6 @@ onUnmounted(() => {
   }
 
   .download-voice-btn {
-    display: none;
-  }
-
-  .stop-song-btn {
     display: none;
   }
 }
