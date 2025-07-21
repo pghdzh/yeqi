@@ -40,8 +40,8 @@ const router = createRouter({
       component: () => import("@/views/jiChatView/index.vue"),
     },
     {
-      path: "/luckDraw",
-      component: () => import("@/views/LuckyDraw/index.vue"),
+      path: "/storyChat",
+      component: () => import("@/views/storyChatView/index.vue"),
     },
   ],
   scrollBehavior() {

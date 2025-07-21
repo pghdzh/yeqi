@@ -11,14 +11,8 @@
 
     <!-- 普通导航 & 移动端下拉导航 -->
     <nav :class="['nav-links', { 'mobile-open': mobileNavOpen }]">
-      <RouterLink
-        v-for="item in navItems"
-        :key="item.name"
-        :to="item.path"
-        class="nav-item"
-        active-class="active-link"
-        @click="mobileNavOpen = false"
-      >
+      <RouterLink v-for="item in navItems" :key="item.name" :to="item.path" class="nav-item" active-class="active-link"
+        @click="mobileNavOpen = false">
         {{ item.name }}
       </RouterLink>
     </nav>
@@ -36,7 +30,8 @@ const navItems = [
   { name: '留言板', path: '/about' },
   { name: '与祈对话', path: '/yeqiChat' },
   { name: '与集对话', path: '/jiChat' },
-  { name: '抽奖', path: '/luckDraw' }
+  { name: '剧情演绎', path: '/storyChat' },
+
 ]
 
 const mobileNavOpen = ref(false)
@@ -48,7 +43,9 @@ function toggleMobileNav() {
 <style scoped>
 .app-header {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   height: 64px;
   display: flex;
@@ -73,6 +70,7 @@ function toggleMobileNav() {
   text-shadow: 0 0 10px rgba(255, 121, 198, 0.4);
   transition: transform 0.3s ease;
 }
+
 .title:hover {
   transform: scale(1.05);
 }
@@ -82,6 +80,7 @@ function toggleMobileNav() {
   display: flex;
   gap: 24px;
 }
+
 .nav-item {
   position: relative;
   color: #e0e0e0;
@@ -89,6 +88,7 @@ function toggleMobileNav() {
   text-decoration: none;
   transition: color 0.3s ease;
 }
+
 .nav-item::after {
   content: "";
   position: absolute;
@@ -101,18 +101,22 @@ function toggleMobileNav() {
   transform: translateX(-50%);
   opacity: 0.6;
 }
+
 .nav-item:hover {
   color: #ffb6e6;
   text-shadow: 0 0 6px #ff79c6;
 }
+
 .nav-item:hover::after {
   width: 100%;
   opacity: 1;
 }
+
 .active-link {
   color: #ff79c6;
   font-weight: 600;
 }
+
 .active-link::after {
   width: 100%;
   opacity: 1;
@@ -120,28 +124,35 @@ function toggleMobileNav() {
 
 /* 汉堡按钮 */
 .hamburger {
-  display: none; /* 默认隐藏 */
+  display: none;
+  /* 默认隐藏 */
   flex-direction: column;
   justify-content: space-around;
-  width: 28px; height: 24px;
+  width: 28px;
+  height: 24px;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
 }
+
 .hamburger span {
   display: block;
-  width: 100%; height: 3px;
+  width: 100%;
+  height: 3px;
   background: #e0e0e0;
   border-radius: 2px;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
+
 .hamburger span.open:nth-child(1) {
   transform: translateY(10px) rotate(45deg);
 }
+
 .hamburger span.open:nth-child(2) {
   opacity: 0;
 }
+
 .hamburger span.open:nth-child(3) {
   transform: translateY(-10px) rotate(-45deg);
 }
@@ -160,7 +171,9 @@ function toggleMobileNav() {
   /* 默认隐藏主导航 */
   .nav-links {
     position: absolute;
-    top: 64px; left: 0; right: 0;
+    top: 64px;
+    left: 0;
+    right: 0;
     flex-direction: column;
     background: rgba(30, 0, 60, 0.9);
     backdrop-filter: blur(12px);
@@ -172,7 +185,8 @@ function toggleMobileNav() {
 
   /* 打开时展开 */
   .nav-links.mobile-open {
-    max-height: 400px; /* 足够容纳所有菜单项 */
+    max-height: 400px;
+    /* 足够容纳所有菜单项 */
   }
 
   .nav-links .nav-item {
