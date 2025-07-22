@@ -34,7 +34,7 @@
         </transition-group>
       </div>
       <form class="input-area" @submit.prevent="sendMessage">
-        <input v-model="input" type="text" placeholder="向集提问…" :disabled="loading" @keydown="handleKeydown" />
+        <input v-model="input" type="text" placeholder="下一步要做什么呢..." :disabled="loading" @keydown="handleKeydown" />
         <button type="submit" :disabled="!input.trim() || loading">发送</button>
         <button type="button" class="clear-btn" @click="clearChat">
           清空全部
@@ -105,7 +105,7 @@ async function sendMessage() {
     chatLog.value.push({
       id: Date.now() + 2,
       role: "bot",
-      text: "对不起，出了点问题，请稍后再试。",
+      text: "API没钱啦，去b站提醒我吧。",
       isError: true,
     });
   } finally {
