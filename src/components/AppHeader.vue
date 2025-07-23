@@ -1,7 +1,10 @@
 <template>
   <header class="app-header">
-    <h1 class="title">Yuzuriha Chronicle</h1>
-
+    <h1 class="title">楪祈电子设定集</h1>
+    <!-- 在线人数展示 -->
+    <div class="online-count" v-if="onlineCount !== null">
+      当前在线：<span class="count">{{ onlineCount }}人</span>
+    </div>
     <!-- 移动端汉堡按钮 -->
     <button class="hamburger" @click="toggleMobileNav" aria-label="Toggle navigation">
       <span :class="{ open: mobileNavOpen }"></span>
@@ -20,7 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { io } from 'socket.io-client'
 
 const navItems = [
   { name: '首页', path: '/' },
@@ -38,6 +42,26 @@ const mobileNavOpen = ref(false)
 function toggleMobileNav() {
   mobileNavOpen.value = !mobileNavOpen.value
 }
+
+
+const siteId = 'yeqi'
+
+const onlineCount = ref<number | null>(null)
+
+// 连接时带上 query.siteId
+const socket: Socket = io('http://1.94.189.79:3000', {
+  query: { siteId }
+})
+
+onMounted(() => {
+  socket.on('onlineCount', (count: number) => {
+    onlineCount.value = count
+  })
+})
+
+onBeforeUnmount(() => {
+  socket.disconnect()
+})
 </script>
 
 <style scoped>
@@ -74,6 +98,55 @@ function toggleMobileNav() {
 .title:hover {
   transform: scale(1.05);
 }
+
+.online-count {
+  position: relative;
+  margin-left: 16px;
+  padding: 6px 14px;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1rem;
+  color: #ffe6fa;
+  background: linear-gradient(135deg, rgba(189, 147, 249, 0.2), rgba(255, 121, 198, 0.2));
+  border: 1px solid rgba(189, 147, 249, 0.5);
+  border-radius: 24px;
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 0 8px rgba(189, 147, 249, 0.3),
+    inset 0 0 4px rgba(255, 121, 198, 0.4);
+  overflow: hidden;
+  cursor: default;
+  transition: transform 0.3s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: -50%;
+    width: 200%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #bd93f9, transparent);
+  
+  }
+
+  &:hover {
+    transform: scale(1.08);
+  }
+
+  .count {
+    display: inline-block;
+    margin-left: 4px;
+    font-weight: 700;
+    color: #bd93f9;
+    text-shadow:
+      0 0 4px rgba(189, 147, 249, 0.6),
+      0 0 8px rgba(255, 121, 198, 0.4);
+    background: linear-gradient(to right, #ff79c6, #bd93f9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+  }
+}
+
 
 /* 默认导航样式 */
 .nav-links {
@@ -161,6 +234,10 @@ function toggleMobileNav() {
 @media (max-width: 768px) {
   .app-header {
     padding: 0 20px;
+  }
+
+  .title {
+    display: none;
   }
 
   /* 显示汉堡按钮 */
