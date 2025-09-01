@@ -212,7 +212,7 @@ function randomSoftHsl() {
   return `hsl(${h}, ${s}%, ${l}%)`;
 }
 
-const names = ["无机甲亢", "祈愿丶楪祈", "超级小萌新3"];
+const names = ["无机甲亢", "祈愿丶楪祈", "超级小萌新3", '雾都式朋克online'];
 const stars = ref(
   names.map((name) => ({
     name,
