@@ -43,6 +43,10 @@ const router = createRouter({
       path: "/storyChat",
       component: () => import("@/views/storyChatView/index.vue"),
     },
+      {
+      path: "/wiki",
+      component: () => import("@/views/wikiView/index.vue"),
+    },
   ],
   scrollBehavior() {
     return { top: 0 };

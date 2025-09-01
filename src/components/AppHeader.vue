@@ -35,7 +35,7 @@ const navItems = [
   { name: '与祈对话', path: '/yeqiChat' },
   { name: '与集对话', path: '/jiChat' },
   { name: '剧情演绎', path: '/storyChat' },
-
+  { name: 'wiki', path: '/wiki' },
 ]
 
 const mobileNavOpen = ref(false)
