@@ -36,6 +36,7 @@ const navItems = [
   { name: '与集对话', path: '/jiChat' },
   { name: '剧情演绎', path: '/storyChat' },
   { name: 'wiki', path: '/wiki' },
+  { name: '网盘资源', path: '/resources' },
 ]
 
 const mobileNavOpen = ref(false)
@@ -125,7 +126,7 @@ onBeforeUnmount(() => {
     width: 200%;
     height: 2px;
     background: linear-gradient(90deg, transparent, #bd93f9, transparent);
-  
+
   }
 
   &:hover {
@@ -143,7 +144,7 @@ onBeforeUnmount(() => {
     background: linear-gradient(to right, #ff79c6, #bd93f9);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    
+
   }
 }
 
@@ -262,7 +263,7 @@ onBeforeUnmount(() => {
 
   /* 打开时展开 */
   .nav-links.mobile-open {
-    max-height: 400px;
+    max-height: 500px;
     /* 足够容纳所有菜单项 */
   }
 
