@@ -50,7 +50,7 @@ const siteId = 'yeqi'
 const onlineCount = ref<number | null>(null)
 
 // 连接时带上 query.siteId
-const socket: Socket = io('http://1.94.189.79:3000', {
+const socket: Socket = io('http://36.150.237.25:3000', {
   query: { siteId }
 })
 
