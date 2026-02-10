@@ -35,14 +35,7 @@ const router = createRouter({
       path: "/yeqiChat",
       component: () => import("@/views/yeqiChatView/index.vue"),
     },
-    {
-      path: "/jiChat",
-      component: () => import("@/views/jiChatView/index.vue"),
-    },
-    {
-      path: "/storyChat",
-      component: () => import("@/views/storyChatView/index.vue"),
-    },
+
     {
       path: "/wiki",
       component: () => import("@/views/wikiView/index.vue"),

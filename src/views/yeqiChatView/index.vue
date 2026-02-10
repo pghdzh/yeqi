@@ -84,7 +84,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick, watch, onUnmounted } from "vue";
-import { sendMessageToYuzuriha } from "@/api/deepseekApi";
+import { sendMessageToHui } from "@/api/deepseekApi";
 
 // 楪祈演唱歌曲列表
 type Song = { id: number; title: string; file: string };
@@ -297,21 +297,24 @@ async function sendMessage() {
   loading.value = true;
   try {
     const filteredLog = chatLog.value.filter((msg) => !msg.isEgg);
-    const botReply = await sendMessageToYuzuriha(userText, filteredLog);
-    chatLog.value.push({
-      id: Date.now() + 1,
-      role: "bot",
-      text: botReply,
-    });
+    const botReply = await sendMessageToHui(userText, filteredLog);
+    if (botReply == "error") {
+      playVoice("error"); // 👈 加这里，错误时播放
+      chatLog.value.push({
+        id: Date.now() + 2,
+        role: "bot",
+        text: "API余额耗尽了，去b站提醒我充钱吧",
+        isError: true,
+      });
+    } else {
+      chatLog.value.push({
+        id: Date.now() + 1,
+        role: "bot",
+        text: botReply,
+      });
+    }
   } catch (e) {
     console.error(e);
-    playVoice("error"); // 👈 加这里，错误时播放
-    chatLog.value.push({
-      id: Date.now() + 2,
-      role: "bot",
-      text: "对不起，出了点问题，请稍后再试。",
-      isError: true,
-    });
   } finally {
     loading.value = false;
     await scrollToBottom();

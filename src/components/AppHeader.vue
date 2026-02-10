@@ -6,7 +6,11 @@
       当前在线：<span class="count">{{ onlineCount }}人</span>
     </div>
     <!-- 移动端汉堡按钮 -->
-    <button class="hamburger" @click="toggleMobileNav" aria-label="Toggle navigation">
+    <button
+      class="hamburger"
+      @click="toggleMobileNav"
+      aria-label="Toggle navigation"
+    >
       <span :class="{ open: mobileNavOpen }"></span>
       <span :class="{ open: mobileNavOpen }"></span>
       <span :class="{ open: mobileNavOpen }"></span>
@@ -14,8 +18,14 @@
 
     <!-- 普通导航 & 移动端下拉导航 -->
     <nav :class="['nav-links', { 'mobile-open': mobileNavOpen }]">
-      <RouterLink v-for="item in navItems" :key="item.name" :to="item.path" class="nav-item" active-class="active-link"
-        @click="mobileNavOpen = false">
+      <RouterLink
+        v-for="item in navItems"
+        :key="item.name"
+        :to="item.path"
+        class="nav-item"
+        active-class="active-link"
+        @click="mobileNavOpen = false"
+      >
         {{ item.name }}
       </RouterLink>
     </nav>
@@ -23,49 +33,47 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { io } from 'socket.io-client'
+import { ref, onMounted, onBeforeUnmount } from "vue";
+import { io } from "socket.io-client";
 
 const navItems = [
-  { name: '首页', path: '/' },
-  { name: '人物设定', path: '/characters' },
-  { name: '角色经历', path: '/world' },
-  { name: '图集', path: '/gallery' },
-  { name: '留言板', path: '/about' },
-  { name: '与祈对话', path: '/yeqiChat' },
-  { name: '与集对话', path: '/jiChat' },
-  { name: '剧情演绎', path: '/storyChat' },
-  { name: 'wiki', path: '/wiki' },
-  { name: '网盘资源', path: '/resources' },
-]
+  { name: "首页", path: "/" },
+  { name: "人物设定", path: "/characters" },
+  { name: "角色经历", path: "/world" },
+  { name: "图集", path: "/gallery" },
+  { name: "留言板", path: "/about" },
+  { name: "与祈对话", path: "/yeqiChat" },
 
-const mobileNavOpen = ref(false)
+  { name: "wiki", path: "/wiki" },
+  { name: "网盘资源", path: "/resources" },
+];
+
+const mobileNavOpen = ref(false);
 function toggleMobileNav() {
-  mobileNavOpen.value = !mobileNavOpen.value
+  mobileNavOpen.value = !mobileNavOpen.value;
 }
 
+const siteId = "yeqi";
 
-const siteId = 'yeqi'
-
-const onlineCount = ref<number | null>(null)
+const onlineCount = ref<number | null>(null);
 
 // 连接时带上 query.siteId
-const socket: Socket = io('http://36.150.237.25:3000', {
-  query: { siteId }
-})
+const socket: Socket = io("http://36.150.237.25:3000", {
+  query: { siteId },
+});
 
 onMounted(() => {
-  socket.on('onlineCount', (count: number) => {
-    onlineCount.value = count
-  })
-})
+  socket.on("onlineCount", (count: number) => {
+    onlineCount.value = count;
+  });
+});
 
 onBeforeUnmount(() => {
-  socket.disconnect()
-})
+  socket.disconnect();
+});
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .app-header {
   position: fixed;
   top: 0;
@@ -104,29 +112,31 @@ onBeforeUnmount(() => {
   position: relative;
   margin-left: 16px;
   padding: 6px 14px;
-  font-family: 'Cinzel Decorative', serif;
+  font-family: "Cinzel Decorative", serif;
   font-size: 1rem;
   color: #ffe6fa;
-  background: linear-gradient(135deg, rgba(189, 147, 249, 0.2), rgba(255, 121, 198, 0.2));
+  background: linear-gradient(
+    135deg,
+    rgba(189, 147, 249, 0.2),
+    rgba(255, 121, 198, 0.2)
+  );
   border: 1px solid rgba(189, 147, 249, 0.5);
   border-radius: 24px;
   backdrop-filter: blur(6px);
-  box-shadow:
-    0 0 8px rgba(189, 147, 249, 0.3),
+  box-shadow: 0 0 8px rgba(189, 147, 249, 0.3),
     inset 0 0 4px rgba(255, 121, 198, 0.4);
   overflow: hidden;
   cursor: default;
   transition: transform 0.3s ease;
 
-  &::before {
-    content: '';
+  ::before {
+    content: "";
     position: absolute;
     bottom: -2px;
     left: -50%;
     width: 200%;
     height: 2px;
     background: linear-gradient(90deg, transparent, #bd93f9, transparent);
-
   }
 
   &:hover {
@@ -138,16 +148,13 @@ onBeforeUnmount(() => {
     margin-left: 4px;
     font-weight: 700;
     color: #bd93f9;
-    text-shadow:
-      0 0 4px rgba(189, 147, 249, 0.6),
+    text-shadow: 0 0 4px rgba(189, 147, 249, 0.6),
       0 0 8px rgba(255, 121, 198, 0.4);
     background: linear-gradient(to right, #ff79c6, #bd93f9);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
   }
 }
-
 
 /* 默认导航样式 */
 .nav-links {
