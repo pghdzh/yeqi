@@ -240,6 +240,13 @@ async function observeNewCards(startIndex = 0) {
     observerCard.observe(cards[i]);
   }
 }
+const fixImageUrl = (url: string): string => {
+  if (url.includes('127.0.0.1')) {
+    // 将 127.0.0.1 替换为当前页面的完整源（协议+域名）
+    return url.replace('http://127.0.0.1', window.location.origin);
+  }
+  return url;
+};
 
 async function loadNextPage() {
   if (loading.value || finished.value) return;
@@ -256,7 +263,7 @@ async function loadNextPage() {
     const list = (
       res.images as Array<{ url: string; like_count: number; id: number }>
     ).map((item) => ({
-      src: item.url,
+      src: fixImageUrl(item.url),
       alt: "",
       likeCount: item.like_count,
       id: item.id, // 如果需要的话，方便点赞用
